@@ -85,6 +85,14 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
         // TODO
+        let endpt = document.getElementById("endpoint").value;
+        fetch(endpt).then((response) => {
+          return response.json()
+        }).then((data) => {
+          document.getElementById("output").innerHTML = JSON.stringify(data);
+        }).catch((err) => {
+          document.getElementById("output").innerHTML = endpt;
+        });
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -93,13 +101,30 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
         // TODO
+        let num = window.prompt('Enter Record ID:');
+        num = parseFloat(num);
+        let endpt = document.getElementById("endpoint").value;
+        fetch(endpt+"/"+num).then((response) => {
+          return response.json()
+        }).then((data) => {
+          document.getElementById("output").innerHTML = JSON.stringify(data);
+        }).catch((err) =>{
+          document.getElementById("output").innerHTML = endpt;
+        })
       }
 
       // This function should use fetch to create one entry in the given endpoint.
       // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function createRecord() {
+      function createRecord( input  ) {
+        if(input === 'show'){
+
+        }
+        
+        if(input === 'submit'){
+
+        }
         // TODO
       }
 
@@ -109,6 +134,13 @@
       // the writeup to view the URL pattern for create and update
       function updateRecord() {
         // TODO
+        if(input === 'show'){
+
+        }
+        
+        if(input === 'submit'){
+
+        }
       }
 
       // This function should use fetch to delete one existing entry in the given endpoint.
