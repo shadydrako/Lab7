@@ -85,8 +85,6 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
         // TODO
-        document.getElementById("recordForm").style.display = 'none';
-        document.getElementById("recordIDcontainer").style.display = 'none';
         
 
         let endpt = document.getElementById("endpoint").value;
@@ -107,13 +105,15 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
         // TODO
-        document.getElementById("recordForm").style.display = 'none';
-        document.getElementById("recordIDcontainer").style.display = 'none';
+ 
         let num = window.prompt('Enter Record ID:');
         num = parseFloat(num);
         let endpt = document.getElementById("endpoint").value;
         fetch(endpt+"/"+num).then((response) => {
-          return response.json()
+          if(!response.ok){
+            throw Error(response.statusText);
+          }
+          return response.json();
         }).then((data) => {
           document.getElementById("output").innerHTML = JSON.stringify(data);
         }).catch(function(error) {
@@ -147,13 +147,20 @@
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-          }).then( response => response.json())
-          .then(data => {
+          }).then( response => {
+            if(!response.ok){
+              throw Error(response.statusText);
+            }
+            return response.json()
+          }).then(data => {
             console.log('Success: ',data);
+            document.getElementById("output").textContent = JSON.stringify(data);
           }).catch((error) => {
             console.error('Error', error );
             document.getElementById("output").textContent = error;
           });
+          document.getElementById("recordForm").style.display = 'none';
+          document.getElementById("recordIDcontainer").style.display = 'none';
         }
       }
 
@@ -189,14 +196,20 @@
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-          }).then(response => response.json)
-          .then(result => {
+          }).then(response => {
+            if(!response.ok){
+              throw Error(response.statusText); 
+            }
+            return response.json
+          }).then(result => {
             console.log('Succcess', result);
             document.getElementById("output").innerHTML = JSON.stringify(data);
           }).catch(error => {
             console.error('Error',error);
             document.getElementById("output").textContent = error;
           });
+          document.getElementById("recordForm").style.display = 'none';
+          document.getElementById("recordIDcontainer").style.display = 'none';
         }
       }
 
@@ -207,14 +220,17 @@
       // delete all, only delete one.
       function deleteRecord() {
         // TODO
-        document.getElementById("recordForm").style.display = 'none';
-        document.getElementById("recordIDcontainer").style.display = 'none';
         let endpt = document.getElementById("endpoint").value;
         let num = parseFloat(window.prompt('Enter Record ID:'));
   
         fetch(endpt+"/"+num,{
           method: 'DELETE'
-        }).then(response => response.json()).then(data =>{
+        }).then(response => {
+          if(!response.ok){
+            throw Error(response.statusText);
+          }
+          return response.json()
+        }).then(data =>{
           document.getElementById("output").innerHTML = JSON.stringify(data);
         }).catch(error => {
           document.getElementById("output").textContent = error;
