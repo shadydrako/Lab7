@@ -85,6 +85,10 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
         // TODO
+        document.getElementById("recordForm").style.display = 'none';
+        document.getElementById("recordIDcontainer").style.display = 'none';
+        
+
         let endpt = document.getElementById("endpoint").value;
         fetch(endpt).then((response) => {
           return response.json()
@@ -92,6 +96,8 @@
           document.getElementById("output").innerHTML = JSON.stringify(data);
         }).catch((err) => {
           document.getElementById("output").innerHTML = endpt;
+          console.log('Error',err);
+          document.getElementById("output").textContent = err;
         });
       }
 
@@ -101,6 +107,8 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
         // TODO
+        document.getElementById("recordForm").style.display = 'none';
+        document.getElementById("recordIDcontainer").style.display = 'none';
         let num = window.prompt('Enter Record ID:');
         num = parseFloat(num);
         let endpt = document.getElementById("endpoint").value;
@@ -108,38 +116,87 @@
           return response.json()
         }).then((data) => {
           document.getElementById("output").innerHTML = JSON.stringify(data);
-        }).catch((err) =>{
-          document.getElementById("output").innerHTML = endpt;
-        })
+        }).catch(function(error) {
+          console.log("Error", error);
+          document.getElementById("output").textContent = error;
+
+        });
       }
 
       // This function should use fetch to create one entry in the given endpoint.
       // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function createRecord( input  ) {
+      function createRecord( input ) {
         if(input === 'show'){
-
+          document.getElementById("recordForm").style.display = 'inline';
         }
-        
         if(input === 'submit'){
+          let val1 = document.getElementById("title").value;
+          let val2 = document.getElementById("author").value;
+          let endpt = document.getElementById("endpoint").value;
 
+          const data = {
+            title: val1,
+            author: val2,
+          };
+
+          fetch(endpt, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          }).then( response => response.json())
+          .then(data => {
+            console.log('Success: ',data);
+          }).catch((error) => {
+            console.error('Error', error );
+            document.getElementById("output").textContent = error;
+          });
         }
-        // TODO
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.
       // From the 4 CRUD actions, this is the UPDATE action, and uses the PUT http method.
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function updateRecord() {
+      function updateRecord( input ) {
         // TODO
         if(input === 'show'){
-
+          document.getElementById("recordForm").style.display = 'inline';
+          document.getElementById("recordIDcontainer").style.display = 'inline';
         }
         
         if(input === 'submit'){
+          let val1 = document.getElementById("title").value;
+          let val2 = document.getElementById("author").value;
+          let val3 = document.getElementById("recordID").value;
+          let endpt = document.getElementById("endpoint").value;
+          const data = {
+            title: val1,
+            author: val2,
+            id: val3
+          }
 
+          let num = parseFloat(val3);
+          console.log(endpt+"/"+num);
+    
+
+          fetch(endpt+"/"+num, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          }).then(response => response.json)
+          .then(result => {
+            console.log('Succcess', result);
+            document.getElementById("output").innerHTML = JSON.stringify(data);
+          }).catch(error => {
+            console.error('Error',error);
+            document.getElementById("output").textContent = error;
+          });
         }
       }
 
@@ -150,6 +207,20 @@
       // delete all, only delete one.
       function deleteRecord() {
         // TODO
+        document.getElementById("recordForm").style.display = 'none';
+        document.getElementById("recordIDcontainer").style.display = 'none';
+        let endpt = document.getElementById("endpoint").value;
+        let num = parseFloat(window.prompt('Enter Record ID:'));
+  
+        fetch(endpt+"/"+num,{
+          method: 'DELETE'
+        }).then(response => response.json()).then(data =>{
+          document.getElementById("output").innerHTML = JSON.stringify(data);
+        }).catch(error => {
+          document.getElementById("output").textContent = error;
+          console.log("Error", error);
+        })
+
       }
 
       window.addEventListener('DOMContentLoaded', () => {
